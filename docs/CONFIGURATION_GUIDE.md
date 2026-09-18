@@ -45,21 +45,61 @@ Config = {
 `Config.Police.enabled` and `Config.Police.records.enabled` both default to false. Enable only for the intended acceptance scenario. Traffic conversations require verified duty and a stationary driver; the installed police system owns arrests, searches, fines and evidence. Self-service records require a separately scoped backend and stay private to the interacting player. `Config.Missions.integrations` similarly allowlists the trusted server resource that verifies mission objectives before completion and payout.
 
 ---
+# Peak AI NPC — Configuration Guide
+
+This guide covers the main open-for-edit settings in `shared/config.lua`. The shipped file remains authoritative for detailed behavior profiles and optional presentation settings.
+
+> [!NOTE]
+> `shared/config.lua` is included in the resource's `escrow_ignore` list and is fully open for editing by server owners and developers.
+
+---
+
+## Overview
+
+Open `shared/config.lua` in your `peak-ai-npc` resource folder to customize interaction distance, framework selection, subtitle styling, voice settings, and gateway thresholds.
+
+```lua
+Config = {
+    Debug = false,
+    ServerLore = '',
+    Framework = 'qbcore',
+    Inventory = 'qb-inventory',
+    Target = 'qb-target',
+    -- ...
+}
+```
+
+---
+
+## Core Settings
+
+| Option | Type | Default | Description |
+| :--- | :--- | :--- | :--- |
+| `Debug` | `boolean` | `false` | Enables verbose console logging for session lifecycle and tool executions. |
+| `ServerLore` | `string` | `''` | Server-specific background information included in NPC system prompts. Keep under 1000 characters for optimal response latency. |
+| `Framework` | `string` | `'qbcore'` | Select `'qbcore'`, `'qbox'`, `'esx'`, `'fw-core'`, `'auto'`, or read-only `'standalone'`. Selection does not establish live qualification. |
+| `Inventory` | `string` | `'qb-inventory'` | Select `'qb-inventory'`, `'ox_inventory'`, `'esx-native'`, `'fw-inventory'`, `'custom'`, or `'auto'`. Consult the compatibility matrix and commerce guide for the exact combination and API requirements. |
+| `Target` | `string` | `'qb-target'` | Select `ox_target`, `qb-target`, native, or explicit authored-only `fw-ui`. Auto selects ox/qb global targeting, then native controls. |
+
+### Commerce, medical, dispatch and police
+
+`Config.Commerce.integrations` is an empty-by-default allowlist of server resources permitted to register custom settlement drivers. Built-in drivers need no registration. All purchases and sales require an explicit server-issued quote confirmation, including when the legacy `requireConfirmationForPurchases` option is changed. See [Commerce verification](COMMERCE_VERIFICATION.md) for driver contracts, journals and recovery.
+
+`Config.Medical` enables the configured supply policy: bandage, $50 each, maximum two, 300-second per-character cooldown. The model proposes a quote and cannot grant supplies or heal directly. Treatment guides the player to the configured `qb-ambulancejob` reception; the installed hospital owns payment and care. The authored doctor stays disabled until its voice is approved.
+
+`Config.Dispatch` requires an explicitly allowlisted service handler. Its defaults are a 120-second character cooldown and a five-second global cooldown, persisted across resource restarts. Reports contain the authoritative position/bucket and bounded unverified narrative; no raw framework event fallback is assumed.
+
+`Config.Police.enabled` and `Config.Police.records.enabled` both default to false. Enable only for the intended acceptance scenario. Traffic conversations require verified duty and a stationary driver; the installed police system owns arrests, searches, fines and evidence. Self-service records require a separately scoped backend and stay private to the interacting player. `Config.Missions.integrations` similarly allowlists the trusted server resource that verifies mission objectives before completion and payout.
+
+---
 
 ## Gateway Connection (`Config.Gateway`)
 
 | Key | Type | Default | Description |
 | :--- | :--- | :--- | :--- |
 | `url` | `string|nil` | `nil` | Set the assigned client-reachable HTTPS endpoint using `peak_ai_npc_gateway_url`. Loopback is for explicit local development only. |
-| `secretConvar` | `string` | `'peak_ai_npc_gateway_secret'` | Legacy/self-hosted shared secret convar. Managed customers use `peak_ai_npc_install_token`. |
+| `secretConvar` | `string` | `'peak_ai_npc_gateway_secret'` | Convar name for the shared gateway secret. Must match `AI_NPC_GATEWAY_SECRET` in your gateway `.env`. |
 | `timeoutMs` | `number` | `32000` | FXServer turn timeout in milliseconds. Keep it above the gateway request deadline so a terminal retry state always reaches the player. |
-| `maxToolCallsPerTurn` | `number` | `1` | Maximum tool calls an NPC can request in a single turn. |
-| `serverId` | `string|nil` | `nil` | Portal-issued server identifier. It is sent as `X-Peak-Server-Id` and must match the install-token binding. |
-
----
-
-## Conversation Limits (`Config.Conversations`)
-
 | Key | Type | Default | Description |
 | :--- | :--- | :--- | :--- |
 | `interactionDistance` | `number` | `3.0` | Maximum distance (meters) between player and ped to initiate conversation. |
