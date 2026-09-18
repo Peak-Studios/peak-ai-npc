@@ -2,6 +2,11 @@
   "name": "peak-ai-npc-gateway",
   "version": "1.0.0",
   "private": true,
+  "author": "Peak Studios",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/Peak-Studios/peak-ai-npc.git"
+  },
   "type": "module",
   "scripts": {
     "build": "tsc -p tsconfig.json",

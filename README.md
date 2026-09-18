@@ -3,6 +3,8 @@
 A self-hosted AI NPC system for FiveM. Give your NPCs real conversations, voice, memory, and tools — powered by your own AI API keys.
 
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](LICENSE)
+[![Discord](https://img.shields.io/badge/Discord-Peak_Studios-7289DA.svg)](https://discord.gg/gAqXUaVEMn)
+[![Organization](https://img.shields.io/badge/GitHub-Peak--Studios-blue.svg)](https://github.com/Peak-Studios/peak-ai-npc)
 
 ---
 
