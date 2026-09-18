@@ -3,7 +3,7 @@
 This guide details how to customize target interactions (`client/targets.lua`) and add localizations (`locales/*.lua`).
 
 > [!NOTE]
-> `client/targets.lua` and `locales/*.lua` are included in `escrow_ignore` and can be freely modified.
+> `client/targets.lua` and `locales/*.lua` are fully open-source and can be customized freely.
 
 ---
 
@@ -77,12 +77,15 @@ AINPCLocale = {
 }
 ```
 
-2. In an operator source build, add the locale to the existing `shared_scripts` list in `fxmanifest.lua`, preserving every current script and its load order. The block below is only a fragment, not a replacement manifest. An escrow customer cannot assume the protected manifest is editable: request a rebuilt operator/Cfx package for newly added locale files. This changes UI strings only and does not qualify spoken-language support:
+2. Add the locale file to `shared_scripts` in `fxmanifest.lua`:
 
 ```lua
 shared_scripts {
     'shared/config.lua',
+    'shared/ped_catalog.lua',
+    'shared/voice_casting.lua',
     'shared/constants.lua',
+    'shared/diagnostics.lua',
     'locales/fr.lua',
     'npcs/examples.lua'
 }

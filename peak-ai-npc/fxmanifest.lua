@@ -3,7 +3,7 @@ game 'gta5'
 lua54 'yes'
 author 'Peak Studios'
 description 'Server-authoritative conversational NPC engine'
-version '0.4.0'
+version '1.0.0'
 
 dependencies { '/onesync' }
 
@@ -60,13 +60,4 @@ files {
     'web/app.js',
     'web/shop.js',
     'web/nui-transparent.css'
-}
-
-escrow_ignore {
-    'shared/config.lua',
-    'shared/voice_casting.lua',
-    'shared/constants.lua',
-    'npcs/examples.lua',
-    'client/targets.lua',
-    'locales/*.lua'
 }

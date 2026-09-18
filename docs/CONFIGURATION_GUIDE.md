@@ -3,7 +3,7 @@
 This guide covers the main open-for-edit settings in `shared/config.lua`. The shipped file remains authoritative for detailed behavior profiles and optional presentation settings.
 
 > [!NOTE]
-> `shared/config.lua` is included in the resource's `escrow_ignore` list and is fully open for editing by server owners and developers.
+> All files in `peak-ai-npc` are completely open source and free to customize.
 
 ---
 

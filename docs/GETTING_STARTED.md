@@ -1,6 +1,6 @@
 # Peak AI NPC: Getting Started
 
-Peak AI NPC is a FiveM resource for server-authoritative conversations. This is the self-hosted operator guide for the private 0.4.0 candidate. Managed buyers use their operator-issued gateway URL, server ID and install token instead of running a gateway. OneSync is required by the manifest. The resource owns gameplay state; the gateway provides model, memory, speech, vision, and transcription services.
+Peak AI NPC is a FiveM resource for server-authoritative conversations with artificial intelligence. The resource owns gameplay state, while the lightweight self-hosted gateway handles AI model interaction, memory, speech synthesis, vision processing, and speech-to-text transcription. OneSync is required by the manifest.
 
 ## 1. Install the resource
 

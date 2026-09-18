@@ -576,8 +576,20 @@ async function handle(req: IncomingMessage, res: ServerResponse) {
   }
   if (req.method === 'GET' && req.url === '/health') {
     const { healthy } = gatewayHealth();
-    const managedMode = Boolean(false);
-    return send(res, healthy ? 200 : 503, { ok: healthy, provider: provider.name, speech: speech.name, speechReadiness, voiceRegistry: { status: voiceRegistryStatus, ...voiceRegistry.counts('*') }, audio: audioDelivery.stats(), vision: vision.name, transcription: transcription.name, memory: memoryStatus, residents: residentStatus, extraction: extractionQueue.stats(), managedSaas: { enabled: managedMode, entitlement: entitlementValidator.readiness(), usage: usageSettlement.readiness(), heartbeat: portalHeartbeat.readiness(), dataDeletion: portalDataDeletion.readiness(), ready: !managedMode || (entitlementValidator.readiness().ready && usageSettlement.readiness().ready && portalHeartbeat.readiness().ready && portalDataDeletion.readiness().ready), quotaBalanceCache: 'disabled' }, version: '0.4.0' });
+    return send(res, healthy ? 200 : 503, {
+      ok: healthy,
+      version: '1.0.0',
+      provider: provider.name,
+      speech: speech.name,
+      speechReadiness,
+      voiceRegistry: { status: voiceRegistryStatus, ...voiceRegistry.counts('*') },
+      audio: audioDelivery.stats(),
+      vision: vision.name,
+      transcription: transcription.name,
+      memory: memoryStatus,
+      residents: residentStatus,
+      extraction: extractionQueue.stats(),
+    });
   }
   if (req.method === 'GET' && req.url === '/admin') return sendHtml(res, modernAdminHtml);
   const audioMatch = req.method === 'GET' ? req.url?.match(/^\/v1\/audio\/([A-Za-z0-9]{32})$/) : undefined;

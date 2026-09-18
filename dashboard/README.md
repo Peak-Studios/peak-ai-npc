@@ -1,10 +1,15 @@
-# Gateway dashboard
+# Gateway Control Dashboard
 
-The first dashboard surface is served by the gateway at `/admin`. It provides:
+The gateway includes a self-hosted web control dashboard served at `/admin` (e.g. `http://127.0.0.1:8787/admin`).
 
-- Health/provider/memory status.
-- Registered server list.
-- Per-server request, token, failure, and latency metrics.
-- Authenticated NPC catalog listing, JSON editing, save, and delete controls.
+It provides:
+- **System status**: Real-time provider health, memory store state, and audio delivery statistics.
+- **Server list**: Inspect registered FXServer connections, versions, and latency.
+- **Usage & metrics**: Per-server request counts, token consumption, failures, and average response latency.
+- **NPC Studio**: Interactive browser-based NPC catalog editor. Author and adjust NPC identities, prompts, voice profiles, and tool allowlists with direct JSON saving.
+- **Resident Inspector**: View persistent resident AI state, simulated routines, moods, and trigger simulation ticks.
+- **Privacy Controls**: Manage server-scoped data deletion and view current retention policies.
 
-It intentionally keeps the admin secret in the browser session only and sends it only as the gateway authentication header. Production deployments should put the gateway behind TLS, add operator identity/roles, CSRF protection, and replace this local operational surface with the full hosted dashboard described in the product plan.
+### Authentication
+
+Access to `/admin` requires entering your `AI_NPC_GATEWAY_SECRET` (configured in `gateway/.env`). The secret is stored only in your active browser session and never sent to any third-party service.

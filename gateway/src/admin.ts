@@ -36,7 +36,7 @@ export const modernAdminHtml = `<!doctype html>
         <button data-view="conversations">Conversations</button>
         <button data-view="privacy">Privacy</button>
       </nav>
-      <small>Gateway 0.4.0</small>
+      <small>Gateway 1.0.0</small>
     </aside>
     <main class="workspace">
       <header class="topbar">

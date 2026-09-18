@@ -3,13 +3,13 @@
 This guide explains how to define custom AI NPCs, personalities, tool permissions, and spawn points in `npcs/`.
 
 > [!NOTE]
-> `npcs/examples.lua` is explicitly listed in `escrow_ignore`. Other files are not automatically loaded or made editable by placing them in `npcs/`.
+> Define your custom NPCs in `npcs/examples.lua` or create new `.lua` files in `npcs/` and add them to `fxmanifest.lua`.
 
 ---
 
 ## Defining an NPC
 
-Add NPC definitions to `AINPCDefinitions` in `npcs/examples.lua`. A separate integration resource can register definitions through the documented server export. Adding another Lua file to this resource requires a corresponding manifest entry and a new escrow build.
+Add NPC definitions to `AINPCDefinitions` in `npcs/examples.lua`, or register them dynamically from another resource using the server export `exports['peak-ai-npc']:registerNpc(...)`.
 
 Configured definitions are for special roles: shops, missions, service staff, and other peds that need explicit tools or policies. Ordinary ambient peds do not need definitions: aim at one and use `/ainpc`. Ambient conversations receive only the reversible social-action allowlist from `Config.Ambient.allowedTools`; durable gameplay tools remain exclusive to configured roles.
 
