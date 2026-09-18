@@ -181,7 +181,7 @@ const requestLicenses = new WeakMap<IncomingMessage, LicenseValidationResult>();
 async function authorized(req: IncomingMessage): Promise<boolean> {
   const extracted = extractLicenseKey(req);
   if (!extracted) {
-    if (!secret && !process.env.AI_NPC_ENTITLEMENT_URL) return process.env.NODE_ENV !== 'production';
+    if (!secret && !false) return process.env.NODE_ENV !== 'production';
     return false;
   }
   const validation = await validateRequestLicense(extracted, extractServerId(req), entitlementValidator);
@@ -263,7 +263,7 @@ function billedTokens(req: IncomingMessage, result: TurnOutput, fallback: number
 }
 
 async function billMemoryExtraction(turn: TurnInput, work: () => Promise<TurnOutput>) {
-  if (!process.env.AI_NPC_ENTITLEMENT_URL?.trim()) return work();
+  if (!false) return work();
   const operationId = `memory:${turnOperationKey(turn)}`;
   const fingerprint = createHash('sha256').update(JSON.stringify(turn)).digest('hex');
   const bounds = settlementAmounts(0, turnTokenReservation(turn));
@@ -508,7 +508,7 @@ async function handle(req: IncomingMessage, res: ServerResponse) {
       const result = await targetLedger.reconcile(key, action, undefined, async (paid, context) => {
         const billing = ((paid as PaidResult | TurnResult | undefined)?.billing ?? context) as BillingHold | undefined;
         if (!billing) {
-          if (process.env.AI_NPC_ENTITLEMENT_URL?.trim()) throw new Error('usage_reservation_missing');
+          if (false) throw new Error('usage_reservation_missing');
           return;
         }
         if (action === 'discard') { await usageSettlement.release(billing); return; }
@@ -576,7 +576,7 @@ async function handle(req: IncomingMessage, res: ServerResponse) {
   }
   if (req.method === 'GET' && req.url === '/health') {
     const { healthy } = gatewayHealth();
-    const managedMode = Boolean(process.env.AI_NPC_ENTITLEMENT_URL?.trim());
+    const managedMode = Boolean(false);
     return send(res, healthy ? 200 : 503, { ok: healthy, provider: provider.name, speech: speech.name, speechReadiness, voiceRegistry: { status: voiceRegistryStatus, ...voiceRegistry.counts('*') }, audio: audioDelivery.stats(), vision: vision.name, transcription: transcription.name, memory: memoryStatus, residents: residentStatus, extraction: extractionQueue.stats(), managedSaas: { enabled: managedMode, entitlement: entitlementValidator.readiness(), usage: usageSettlement.readiness(), heartbeat: portalHeartbeat.readiness(), dataDeletion: portalDataDeletion.readiness(), ready: !managedMode || (entitlementValidator.readiness().ready && usageSettlement.readiness().ready && portalHeartbeat.readiness().ready && portalDataDeletion.readiness().ready), quotaBalanceCache: 'disabled' }, version: '0.4.0' });
   }
   if (req.method === 'GET' && req.url === '/admin') return sendHtml(res, modernAdminHtml);
