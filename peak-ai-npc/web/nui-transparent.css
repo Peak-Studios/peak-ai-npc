@@ -1,0 +1,846 @@
+/* Transparent-root stylesheet · Peak AI NPC · Seamless PTT Voice HUD */
+/* Filename change intentionally invalidates CEF cache on update.     */
+
+/* ── Design Tokens ──────────────────────────────────────────────── */
+:root {
+    font-family: Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+    --ink:        #f0f2ed;
+    --ink-dim:    #b0b3ae;
+    --muted:      #7a7d78;
+    --surface:    rgba(14, 18, 15, .85);
+    --line:       rgba(255, 255, 255, .12);
+    --accent:     #D6FF62;
+    --accent-dim: rgba(214, 255, 98, .22);
+    --accent-glow: rgba(214, 255, 98, .35);
+    --danger:     #ff6b65;
+    --danger-dim: rgba(255, 107, 101, .18);
+    --blue:       #5ac8fa;   /* thinking shimmer */
+}
+
+/* ── Reset ───────────────────────────────────────────────────────── */
+* { box-sizing: border-box; }
+
+html, body {
+    width: 100%;
+    height: 100%;
+    margin: 0;
+    overflow: hidden;
+    background: transparent !important;
+    background-color: transparent !important;
+    color: var(--ink);
+    user-select: none;
+    -webkit-font-smoothing: antialiased;
+}
+
+button, input { font: inherit; }
+button { cursor: pointer; }
+
+/* ── Layout ──────────────────────────────────────────────────────── */
+main {
+    position: fixed;
+    inset: 0;
+    display: grid;
+    align-items: end;
+    justify-items: center;
+    padding: 0 14px 3.2vh;
+    pointer-events: none;
+}
+
+main[hidden], [hidden] { display: none !important; }
+
+/* ── Voice Dock ──────────────────────────────────────────────────── */
+/*
+   The dock is a passive status strip — no pointer-events in voice mode.
+   Cursor mode (Shift) enables text fallback interaction.
+*/
+.voice-dock {
+    width: min(380px, calc(100vw - 28px));
+    padding: 11px 13px 9px;
+    overflow: hidden;
+    border: 1px solid var(--line);
+    border-radius: 14px;
+    background: var(--surface);
+    box-shadow: 0 12px 36px rgba(0, 0, 0, .38);
+    pointer-events: none;  /* Never intercepts game clicks in voice mode */
+    transition:
+        border-color .2s ease,
+        box-shadow .2s ease,
+        background .2s ease;
+    animation: dock-in .26s cubic-bezier(.2, .8, .2, 1) both;
+}
+
+/* Cursor / text-fallback mode — enable interaction */
+.voice-dock[data-interactive="true"] {
+    border-color: rgba(184, 255, 101, .28);
+    box-shadow: 0 12px 40px rgba(0, 0, 0, .44), 0 0 0 1px rgba(184, 255, 101, .05);
+    pointer-events: auto;
+}
+
+/* State-based accent borders */
+.voice-dock[data-state="capturing"],
+.voice-dock[data-state="listening"] {
+    border-color: rgba(255, 107, 101, .35);
+    box-shadow: 0 12px 36px rgba(0, 0, 0, .38), 0 0 0 1px rgba(255, 107, 101, .08);
+}
+
+.voice-dock[data-state="thinking"],
+.voice-dock[data-state="transcribing"],
+.voice-dock[data-state="deliberating"],
+.voice-dock[data-state="action_pending"],
+.voice-dock[data-state="synthesizing"] {
+    border-color: rgba(90, 200, 250, .2);
+}
+
+.voice-dock[data-state="speaking"] {
+    border-color: rgba(184, 255, 101, .22);
+}
+
+/* ── Identity Bar ────────────────────────────────────────────────── */
+.identity {
+    display: grid;
+    grid-template-columns: 7px 1fr 22px;
+    align-items: center;
+    gap: 8px;
+}
+
+.identity div {
+    display: grid;
+    gap: 1px;
+    min-width: 0;
+}
+
+.identity strong {
+    overflow: hidden;
+    font-size: 13px;
+    font-weight: 650;
+    line-height: 1.15;
+    letter-spacing: -.01em;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+
+.identity span:not(.presence) {
+    color: var(--muted);
+    font-size: 9px;
+    line-height: 1.2;
+    text-transform: uppercase;
+    letter-spacing: .1em;
+}
+
+/* Presence dot */
+.presence {
+    width: 6px;
+    height: 6px;
+    border-radius: 999px;
+    background: var(--accent);
+    box-shadow: 0 0 8px rgba(184, 255, 101, .65);
+    flex-shrink: 0;
+}
+
+.voice-dock[data-state="thinking"] .presence,
+.voice-dock[data-state="transcribing"] .presence,
+.voice-dock[data-state="deliberating"] .presence,
+.voice-dock[data-state="action_pending"] .presence,
+.voice-dock[data-state="synthesizing"] .presence {
+    background: var(--blue);
+    box-shadow: 0 0 8px rgba(90, 200, 250, .55);
+    animation: presence-pulse 0.9s ease-in-out infinite;
+}
+
+.voice-dock[data-state="error"] .presence {
+    background: var(--danger);
+    box-shadow: 0 0 8px rgba(255, 107, 101, .6);
+}
+
+.voice-dock[data-state="capturing"] .presence,
+.voice-dock[data-state="listening"] .presence {
+    background: var(--danger);
+    box-shadow: 0 0 8px rgba(255, 107, 101, .65);
+    animation: presence-pulse 0.6s ease-in-out infinite;
+}
+
+/* Close button */
+.quiet-button {
+    border: 0;
+    background: transparent;
+    color: var(--muted);
+    padding: 0;
+}
+
+#close {
+    width: 22px;
+    height: 22px;
+    border-radius: 50%;
+    font-size: 16px;
+    line-height: 20px;
+    opacity: 0;
+    transition: opacity .15s ease, color .15s ease;
+}
+
+.voice-dock[data-interactive="true"] #close { opacity: 1; }
+#close:hover { color: var(--ink); }
+
+/* ── Voice Stage ─────────────────────────────────────────────────── */
+.voice-stage {
+    display: grid;
+    grid-template-columns: 36px 1fr;
+    align-items: center;
+    gap: 10px;
+    min-height: 42px;
+    padding: 5px 0 2px;
+}
+
+/* ── Mic Indicator (visual only, NOT a button) ───────────────────── */
+.mic-indicator {
+    position: relative;
+    display: grid;
+    width: 32px;
+    height: 32px;
+    place-items: center;
+    border-radius: 50%;
+    background: rgba(255, 255, 255, .07);
+    color: var(--muted);
+    flex-shrink: 0;
+    transition: background .2s ease, color .2s ease, box-shadow .2s ease;
+}
+
+.mic-indicator svg {
+    width: 15px;
+    height: 15px;
+    fill: currentColor;
+    z-index: 1;
+    transition: opacity .2s ease;
+}
+
+/* Mic rings — animated pulsing during capture/listening */
+.mic-rings {
+    position: absolute;
+    inset: 0;
+    border: 1.5px solid rgba(255, 107, 101, .5);
+    border-radius: inherit;
+    opacity: 0;
+    pointer-events: none;
+}
+
+/* Inline waveform bars inside mic indicator (recording state) */
+.waveform-inline {
+    display: none;
+    position: absolute;
+    inset: 0;
+    align-items: center;
+    justify-content: center;
+    gap: 2px;
+    z-index: 1;
+}
+
+.waveform-inline i {
+    display: block;
+    width: 2px;
+    height: 4px;
+    border-radius: 2px;
+    background: #fff;
+    animation: wave-mini .7s ease-in-out infinite alternate;
+}
+
+.waveform-inline i:nth-child(2), .waveform-inline i:nth-child(4) { animation-delay: -.18s; }
+.waveform-inline i:nth-child(3) { animation-delay: -.35s; }
+
+/* Capturing / listening states — show red mic indicator */
+.voice-dock[data-state="capturing"] .mic-indicator,
+.voice-dock[data-state="listening"] .mic-indicator {
+    background: var(--danger);
+    color: #fff;
+    box-shadow: 0 4px 14px rgba(255, 107, 101, .4);
+}
+
+.voice-dock[data-state="capturing"] .mic-rings,
+.voice-dock[data-state="listening"] .mic-rings {
+    animation: listen-ring 1.1s ease-out infinite;
+    opacity: 1;
+}
+
+.voice-dock[data-state="capturing"] .mic-indicator svg,
+.voice-dock[data-state="listening"] .mic-indicator svg { opacity: 0; }
+
+.voice-dock[data-state="capturing"] .waveform-inline,
+.voice-dock[data-state="listening"] .waveform-inline { display: flex; }
+
+/* Thinking state — blue tint */
+.voice-dock[data-state="thinking"] .mic-indicator,
+.voice-dock[data-state="transcribing"] .mic-indicator,
+.voice-dock[data-state="deliberating"] .mic-indicator,
+.voice-dock[data-state="action_pending"] .mic-indicator,
+.voice-dock[data-state="synthesizing"] .mic-indicator {
+    background: rgba(90, 200, 250, .12);
+    color: var(--blue);
+}
+
+/* Speaking state — green tint */
+.voice-dock[data-state="speaking"] .mic-indicator {
+    background: var(--accent-dim);
+    color: var(--accent);
+}
+
+/* ── State Copy ──────────────────────────────────────────────────── */
+.state-copy {
+    display: grid;
+    gap: 2px;
+    min-width: 0;
+}
+
+.state-copy strong {
+    font-size: 14px;
+    font-weight: 630;
+    letter-spacing: -.02em;
+}
+
+.state-copy span {
+    overflow: hidden;
+    color: var(--ink-dim);
+    font-size: 11px;
+    line-height: 1.35;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+
+.voice-dock[data-state="error"] .state-copy span {
+    white-space: normal;
+}
+
+/* ── Waveform (shown below stage during recording/speaking) ──────── */
+.waveform {
+    display: none;
+    align-items: flex-end;
+    gap: 2.5px;
+    height: 14px;
+    margin: 0 0 3px 46px;
+}
+
+.waveform i {
+    display: block;
+    width: 2.5px;
+    border-radius: 3px;
+    background: var(--accent);
+    height: 30%;
+    transition: height .08s ease;
+}
+
+.voice-dock[data-state="capturing"] .waveform,
+.voice-dock[data-state="listening"] .waveform {
+    display: flex;
+}
+
+.voice-dock[data-state="capturing"] .waveform i,
+.voice-dock[data-state="listening"] .waveform i {
+    background: var(--danger);
+    animation: wave .75s ease-in-out infinite alternate;
+}
+
+.voice-dock[data-state="speaking"] .waveform {
+    display: flex;
+}
+
+.voice-dock[data-state="speaking"] .waveform i {
+    animation: wave .75s ease-in-out infinite alternate;
+}
+
+.waveform i:nth-child(2), .waveform i:nth-child(6) { animation-delay: -.2s; }
+.waveform i:nth-child(3), .waveform i:nth-child(5) { animation-delay: -.4s; }
+.waveform i:nth-child(4)                            { animation-delay: -.6s; }
+
+/* ── Transcript ──────────────────────────────────────────────────── */
+.transcript {
+    margin: 2px 0 4px 46px;
+    color: var(--ink-dim);
+    font-size: 11px;
+    line-height: 1.4;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    animation: copy-in .18s ease both;
+}
+
+/* ── Purchase confirmation ───────────────────────────────────────── */
+.purchase {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 12px;
+    margin: 4px 0 5px;
+    padding: 6px 8px;
+    border-top: 1px solid var(--line);
+    border-bottom: 1px solid var(--line);
+    color: var(--ink-dim);
+    font-size: 10px;
+}
+
+.purchase button, .text-fallback button {
+    border: 0;
+    border-radius: 9px;
+    background: var(--accent);
+    color: #18210f;
+    font-weight: 700;
+}
+
+.purchase button { padding: 5px 9px; }
+
+/* ── Text Fallback (cursor mode only) ───────────────────────────── */
+.text-fallback {
+    display: grid;
+    gap: 5px;
+    padding: 5px 0 6px;
+    animation: copy-in .18s ease both;
+}
+
+.text-fallback label {
+    color: var(--muted);
+    font-size: 9px;
+    text-transform: uppercase;
+    letter-spacing: .09em;
+}
+
+.text-fallback div { display: flex; gap: 6px; }
+
+.text-fallback input {
+    flex: 1;
+    min-width: 0;
+    border: 1px solid var(--line);
+    border-radius: 9px;
+    outline: none;
+    background: rgba(255, 255, 255, .055);
+    color: var(--ink);
+    padding: 7px 10px;
+    user-select: text;
+    font-size: 11px;
+}
+
+.text-fallback input:focus { border-color: rgba(184, 255, 101, .45); }
+.text-fallback button { padding: 0 11px; font-size: 11px; }
+
+/* ── Footer ──────────────────────────────────────────────────────── */
+footer {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    min-height: 16px;
+    border-top: 1px solid var(--line);
+    padding-top: 5px;
+    color: var(--muted);
+    font-size: 9px;
+    letter-spacing: .04em;
+}
+
+#textToggle {
+    padding: 1px;
+    font-size: 8px;
+    opacity: .72;
+    transition: opacity .15s ease;
+}
+
+.voice-dock[data-interactive="true"] #textToggle { opacity: 1; }
+
+/* Show textToggle on hover so players discover it */
+.voice-dock:hover #textToggle { opacity: 1; }
+
+/* ── NPC Subtitle Fallback ───────────────────────────────────────── */
+.subtitle-fallback {
+    position: fixed;
+    left: 50%;
+    bottom: 15vh;
+    max-width: min(640px, 86vw);
+    transform: translateX(-50%);
+    border-radius: 12px;
+    background: rgba(10, 12, 11, .88);
+    box-shadow: 0 12px 40px rgba(0, 0, 0, .38);
+    padding: 10px 16px;
+    color: var(--ink);
+    font-size: 16px;
+    line-height: 1.45;
+    text-align: center;
+    pointer-events: none;
+    animation: copy-in .18s ease both;
+}
+
+/* Browser-only lifecycle controls, revealed exclusively by ?preview=demo. */
+.preview-controls {
+    position: fixed;
+    top: 24px;
+    right: 24px;
+    display: grid;
+    gap: 7px;
+    min-width: 190px;
+    border: 1px solid var(--line);
+    border-radius: 12px;
+    background: var(--surface);
+    box-shadow: 0 12px 36px rgba(0, 0, 0, .38);
+    padding: 11px;
+    color: var(--ink);
+    pointer-events: auto;
+}
+
+.preview-controls > span {
+    color: var(--muted);
+    font-size: 9px;
+    letter-spacing: .08em;
+    text-transform: uppercase;
+}
+
+.preview-controls > strong { font-size: 13px; }
+.preview-controls > div { display: flex; gap: 6px; }
+.preview-controls button {
+    border: 1px solid var(--line);
+    border-radius: 8px;
+    background: rgba(255, 255, 255, .055);
+    color: var(--ink);
+    padding: 6px 9px;
+}
+.preview-controls button:last-child { flex: 1; }
+.preview-controls button:hover { border-color: rgba(184, 255, 101, .4); }
+
+/* ── Keyframe Animations ─────────────────────────────────────────── */
+@keyframes dock-in {
+    from { opacity: 0; transform: translateY(14px) scale(.97); }
+    to   { opacity: 1; transform: translateY(0)    scale(1);   }
+}
+
+@keyframes copy-in {
+    from { opacity: 0; transform: translateY(4px); }
+    to   { opacity: 1; transform: translateY(0);   }
+}
+
+@keyframes listen-ring {
+    from { opacity: .8; transform: scale(1);    }
+    to   { opacity: 0;  transform: scale(1.6);  }
+}
+
+@keyframes presence-pulse {
+    50% { opacity: .3; transform: scale(.7); }
+}
+
+@keyframes wave {
+    from { height: 15%; }
+    to   { height: 100%; }
+}
+
+@keyframes wave-mini {
+    from { height: 3px; }
+    to   { height: 10px; }
+}
+
+/* ── Responsive ──────────────────────────────────────────────────── */
+@media (max-width: 420px) {
+    main { padding-bottom: 2.5vh; }
+    .voice-dock { border-radius: 12px; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+    *, *::before, *::after {
+        animation: none !important;
+        transition: none !important;
+    }
+}
+
+/* Visible keyboard focus without changing the transparent game canvas. */
+button:focus-visible, input:focus-visible { outline: 2px solid #a8dfbf; outline-offset: 3px; }
+.microphone-settings { display: flex; flex-wrap: wrap; align-items: center; gap: 8px; padding: 8px 16px; font-size: 12px; }
+.microphone-settings select { flex: 1; min-width: 0; max-width: 100%; background: #20232a; color: #fff; border: 1px solid #555; border-radius: 4px; padding: 5px; }
+
+/* ── Peak AI Shopkeeper Wares Showcase (Glassmorphism & Neon #D6FF62) ─ */
+.shop-showcase {
+    position: fixed;
+    top: 4vh;
+    right: 36px;
+    width: min(450px, calc(100vw - 72px));
+    max-height: 86vh;
+    display: flex;
+    flex-direction: column;
+    background: linear-gradient(145deg, #1c241d, #0e120f 65%);
+    border: 1px solid rgba(214, 255, 98, 0.22);
+    border-radius: 18px;
+    box-shadow: 0 24px 60px rgba(0, 0, 0, 0.65), 0 0 35px rgba(214, 255, 98, 0.1);
+    color: var(--ink);
+    z-index: 1000;
+    pointer-events: auto;
+    overflow: hidden;
+    animation: shop-in 0.28s cubic-bezier(0.16, 1, 0.3, 1) both;
+}
+
+@keyframes shop-in {
+    from { opacity: 0; transform: translateX(20px) scale(0.97); }
+    to   { opacity: 1; transform: translateX(0) scale(1); }
+}
+
+.shop-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 14px 18px;
+    border-bottom: 1px solid var(--line);
+    background: rgba(255, 255, 255, 0.02);
+}
+
+.shop-title-box {
+    display: flex;
+    flex-direction: column;
+    gap: 3px;
+}
+
+.shop-tag {
+    align-self: flex-start;
+    font-size: 10px;
+    letter-spacing: 0.08em;
+    font-weight: 700;
+    color: var(--accent);
+    background: var(--accent-dim);
+    padding: 2px 7px;
+    border-radius: 6px;
+}
+
+.shop-title-box h2 {
+    margin: 0;
+    font-size: 18px;
+    font-weight: 700;
+    color: var(--ink);
+}
+
+.shop-subtitle {
+    font-size: 12px;
+    color: var(--ink-dim);
+}
+
+.shop-toolbar {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 10px 18px;
+    border-bottom: 1px solid var(--line);
+    background: rgba(0, 0, 0, 0.22);
+}
+
+.shop-tabs {
+    display: flex;
+    gap: 6px;
+    flex-wrap: wrap;
+}
+
+.tab-btn {
+    background: transparent;
+    border: 1px solid transparent;
+    color: var(--ink-dim);
+    padding: 5px 11px;
+    border-radius: 8px;
+    font-size: 12px;
+    font-weight: 500;
+    transition: all 0.15s ease;
+}
+
+.tab-btn:hover {
+    color: var(--ink);
+    background: rgba(255, 255, 255, 0.05);
+}
+
+.tab-btn.active {
+    background: var(--accent-dim);
+    border-color: rgba(214, 255, 98, 0.35);
+    color: var(--accent);
+    font-weight: 600;
+}
+
+.shop-balance {
+    font-size: 12px;
+    color: var(--ink-dim);
+    white-space: nowrap;
+}
+
+.shop-balance strong {
+    color: var(--accent);
+    font-size: 13px;
+    margin-left: 2px;
+}
+
+.shop-grid {
+    flex: 1;
+    overflow-y: auto;
+    padding: 14px 18px;
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 10px;
+    min-height: 180px;
+    max-height: 48vh;
+}
+
+.shop-grid::-webkit-scrollbar {
+    width: 6px;
+}
+
+.shop-grid::-webkit-scrollbar-thumb {
+    background: rgba(255, 255, 255, 0.15);
+    border-radius: 4px;
+}
+
+.item-card {
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    padding: 12px;
+    border-radius: 12px;
+    border: 1px solid var(--line);
+    background: rgba(255, 255, 255, 0.03);
+    cursor: pointer;
+    transition: all 0.16s ease;
+}
+
+.item-card:hover {
+    background: rgba(255, 255, 255, 0.07);
+    border-color: rgba(214, 255, 98, 0.3);
+    transform: translateY(-2px);
+    box-shadow: 0 6px 16px rgba(0, 0, 0, 0.3);
+}
+
+.item-card.selected {
+    background: rgba(214, 255, 98, 0.12);
+    border-color: var(--accent);
+    box-shadow: 0 0 16px var(--accent-dim);
+}
+
+.item-top {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    margin-bottom: 6px;
+}
+
+.item-label {
+    font-size: 13px;
+    font-weight: 600;
+    color: var(--ink);
+    line-height: 1.2;
+}
+
+.item-price {
+    font-size: 13px;
+    font-weight: 700;
+    color: var(--accent);
+}
+
+.item-category {
+    font-size: 10px;
+    text-transform: uppercase;
+    color: var(--muted);
+    letter-spacing: 0.05em;
+    margin-bottom: 4px;
+}
+
+.item-desc {
+    font-size: 11px;
+    color: var(--ink-dim);
+    line-height: 1.35;
+}
+
+.shop-footer {
+    padding: 14px 18px;
+    border-top: 1px solid var(--line);
+    background: rgba(0, 0, 0, 0.35);
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+}
+
+.shop-selection-info {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+}
+
+.item-selected-details {
+    display: flex;
+    flex-direction: column;
+}
+
+.item-selected-details strong {
+    font-size: 14px;
+    color: var(--ink);
+}
+
+.item-selected-details span {
+    font-size: 12px;
+    color: var(--accent);
+}
+
+.shop-quantity-controls {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    background: rgba(255, 255, 255, 0.05);
+    padding: 3px 8px;
+    border-radius: 8px;
+    border: 1px solid var(--line);
+}
+
+.qty-btn {
+    width: 24px;
+    height: 24px;
+    border-radius: 6px;
+    border: 1px solid var(--line);
+    background: rgba(255, 255, 255, 0.08);
+    color: var(--ink);
+    font-weight: 700;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    transition: background 0.15s ease;
+}
+
+.qty-btn:hover {
+    background: rgba(255, 255, 255, 0.18);
+}
+
+.qty-display {
+    min-width: 20px;
+    text-align: center;
+    font-size: 13px;
+    font-weight: 700;
+    color: var(--ink);
+}
+
+.shop-checkout-actions {
+    display: flex;
+    gap: 10px;
+}
+
+.shop-chat-btn {
+    flex: 1;
+    padding: 10px 14px;
+    border-radius: 10px;
+    border: 1px solid var(--line);
+    background: rgba(255, 255, 255, 0.06);
+    color: var(--ink);
+    font-size: 13px;
+    font-weight: 600;
+    transition: all 0.15s ease;
+}
+
+.shop-chat-btn:hover {
+    background: rgba(255, 255, 255, 0.12);
+    border-color: rgba(255, 255, 255, 0.2);
+}
+
+.shop-buy-btn {
+    flex: 1.5;
+    padding: 10px 16px;
+    border-radius: 10px;
+    border: none;
+    background: var(--accent);
+    color: #0d120f;
+    font-size: 13px;
+    font-weight: 700;
+    cursor: pointer;
+    box-shadow: 0 4px 16px rgba(214, 255, 98, 0.3);
+    transition: all 0.15s ease;
+}
+
+.shop-buy-btn:hover {
+    filter: brightness(1.1);
+    box-shadow: 0 6px 22px rgba(214, 255, 98, 0.45);
+    transform: translateY(-1px);
+}

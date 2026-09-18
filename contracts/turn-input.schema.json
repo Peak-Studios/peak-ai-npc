@@ -1,0 +1,153 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://advanced-ai-npc.local/contracts/turn-input.schema.json",
+  "title": "TurnInput",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "serverId",
+    "sessionId",
+    "npc",
+    "context",
+    "history",
+    "input",
+    "allowedTools"
+  ],
+  "properties": {
+    "serverId": {
+      "type": "string",
+      "minLength": 1,
+      "maxLength": 100
+    },
+    "sessionId": {
+      "type": "string",
+      "minLength": 16,
+      "maxLength": 160
+    },
+    "sessionRevision": {
+      "type": "integer",
+      "minimum": 1
+    },
+    "turnId": {
+      "type": "string",
+      "pattern": "^[A-Za-z0-9_.:-]{8,160}$"
+    },
+    "gatewayNonce": {
+      "type": "integer",
+      "minimum": 1,
+      "maximum": 9007199254740991
+    },
+    "requestId": {
+      "type": "string",
+      "pattern": "^[A-Za-z0-9_.:-]{8,160}$"
+    },
+    "npc": {
+      "type": "object"
+    },
+    "context": {
+      "type": "object"
+    },
+    "history": {
+      "type": "array",
+      "maxItems": 64,
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": [
+          "role",
+          "content"
+        ],
+        "properties": {
+          "role": {
+            "enum": [
+              "user",
+              "assistant"
+            ]
+          },
+          "content": {
+            "type": "string",
+            "maxLength": 5000
+          }
+        }
+      }
+    },
+    "input": {
+      "type": "string",
+      "minLength": 1,
+      "maxLength": 500
+    },
+    "allowedTools": {
+      "type": "array",
+      "maxItems": 32,
+      "items": {
+        "type": "string",
+        "maxLength": 64
+      }
+    },
+    "toolSchemas": {
+      "type": "object",
+      "maxProperties": 32,
+      "additionalProperties": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": [
+          "description",
+          "parameters"
+        ],
+        "properties": {
+          "description": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 300
+          },
+          "parameters": {
+            "type": "object",
+            "additionalProperties": false,
+            "required": [
+              "type",
+              "properties",
+              "additionalProperties"
+            ],
+            "properties": {
+              "type": {
+                "const": "object"
+              },
+              "properties": {
+                "type": "object",
+                "maxProperties": 24
+              },
+              "required": {
+                "type": "array",
+                "maxItems": 24,
+                "items": {
+                  "type": "string"
+                }
+              },
+              "additionalProperties": {
+                "const": false
+              }
+            }
+          }
+        }
+      }
+    },
+    "toolResult": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "name",
+        "result"
+      ],
+      "properties": {
+        "name": {
+          "type": "string",
+          "maxLength": 64
+        },
+        "result": {}
+      }
+    },
+    "voice": {
+      "type": "object"
+    }
+  }
+}

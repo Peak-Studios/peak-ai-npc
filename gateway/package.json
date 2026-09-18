@@ -1,0 +1,25 @@
+{
+  "name": "peak-ai-npc-gateway",
+  "version": "1.0.0",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "build": "tsc -p tsconfig.json",
+    "typecheck": "tsc -p tsconfig.json --noEmit",
+    "start": "node dist/server.js",
+    "dev": "tsx src/server.ts",
+    "voices:provision": "npm run build && node dist/voice-provision.js",
+    "voices:review": "node dist/voice-review.js"
+  },
+  "dependencies": {
+    "luaparse": "^0.3.1",
+    "pg": "^8.13.1"
+  },
+  "devDependencies": {
+    "@types/node": "^22.0.0",
+    "@types/pg": "^8.11.10",
+    "fengari": "^0.1.4",
+    "tsx": "^4.19.0",
+    "typescript": "^5.7.0"
+  }
+}

@@ -1,0 +1,46 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://advanced-ai-npc.local/contracts/turn-output.schema.json",
+  "title": "TurnOutput",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["text"],
+  "properties": {
+    "text": { "type": "string", "maxLength": 5000 },
+    "requestId": { "type": "string", "pattern": "^[A-Za-z0-9_.:-]{8,160}$" },
+    "sessionRevision": { "type": "integer", "minimum": 1 },
+    "turnId": { "type": "string", "pattern": "^[A-Za-z0-9_.:-]{8,160}$" },
+    "gatewayNonce": { "type": "string", "pattern": "^[A-Za-z0-9_.:-]{8,160}$" },
+    "toolCall": { "type": "object" },
+    "relationship": { "type": "object" },
+    "usage": { "type": "object" },
+    "performance": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["emotion", "intensity", "cadence", "deliveryPreset", "gesture", "gaze"],
+      "properties": {
+        "emotion": { "enum": ["neutral", "warm", "stern", "nervous", "urgent", "quiet", "menacing"] },
+        "intensity": { "type": "number", "minimum": 0, "maximum": 1 },
+        "cadence": { "enum": ["slow", "measured", "natural", "brisk"] },
+        "deliveryPreset": { "enum": ["neutral", "warm", "stern", "nervous", "urgent", "quiet", "menacing"] },
+        "gesture": { "enum": ["none", "greet", "explain", "warn", "dismiss"] },
+        "gaze": { "enum": ["player", "away", "scan"] }
+      }
+    },
+    "audio": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["utteranceId", "url", "expiresAt", "contentType", "maximumDistance"],
+      "properties": {
+        "utteranceId": { "type": "string", "pattern": "^[A-Za-z0-9_.:-]{8,160}$" },
+        "url": { "type": "string", "maxLength": 2048 },
+        "expiresAt": { "type": "string", "format": "date-time" },
+        "contentType": { "const": "audio/mpeg" },
+        "sourceNetworkId": { "type": "integer", "minimum": 1 },
+        "maximumDistance": { "type": "number", "exclusiveMinimum": 0, "maximum": 100 },
+        "durationMs": { "type": "integer", "minimum": 0, "maximum": 300000 }
+      }
+    },
+    "audioUrl": { "type": "string", "maxLength": 2048, "description": "One-release compatibility alias for audio.url." }
+  }
+}

@@ -1,0 +1,37 @@
+# Environment — never commit credentials or secrets
+.env
+.env.*
+!.env.example
+
+# Gateway build output and runtime state
+gateway/node_modules/
+gateway/dist/
+gateway/data/
+gateway/logs/
+gateway/voice-profiles.json
+gateway/.runtime/
+
+# FiveM resource build output
+peak-ai-npc/dist/
+node_modules/
+dist/
+coverage/
+
+# Release archives
+releases/
+
+# Internal agent/planning/tooling directories
+.agents/
+.planning/
+.learnings/
+.runtime/
+.cursorrules
+.cursor/
+.codex-backup/
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Logs
+*.log

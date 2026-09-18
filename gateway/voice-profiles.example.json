@@ -1,0 +1,405 @@
+[
+  {
+    "voiceProfileId": "martin-hale",
+    "genderPresentation": "masculine",
+    "ageBand": "adult",
+    "accent": "Indian English",
+    "language": "en-IN",
+    "qualityMode": "realtime",
+    "deliveryPreset": "warm",
+    "exclusive": true,
+    "design": {
+      "description": "A grounded adult male neighborhood shopkeeper speaking natural Indian English: patient, warm, clear, friendly, conversational, and never announcer-like or caricatured.",
+      "previewText": "Good evening. Take your time, and let me know if you need help finding anything."
+    }
+  },
+  {
+    "voiceProfileId": "rico",
+    "genderPresentation": "masculine",
+    "ageBand": "young-adult",
+    "accent": "neutral American",
+    "language": "en",
+    "qualityMode": "realtime",
+    "deliveryPreset": "stern",
+    "exclusive": true,
+    "design": {
+      "description": "A controlled young adult male street contact: low-key, confident, direct, expressive under pressure, and conversational.",
+      "previewText": "Keep your voice down. If you are serious about the job, listen carefully."
+    }
+  },
+  {
+    "voiceProfileId": "ambient.neutral.01",
+    "genderPresentation": "androgynous",
+    "ageBand": "adult",
+    "language": "en",
+    "qualityMode": "realtime",
+    "deliveryPreset": "neutral",
+    "archetypes": [
+      "civilian"
+    ],
+    "design": {
+      "description": "A versatile city resident voice with natural conversational delivery and no authored accent. Casting variant 1; it must sound distinct from the other variants.",
+      "previewText": "I have a minute. Tell me what is going on, and I will help if I can."
+    }
+  },
+  {
+    "voiceProfileId": "ambient.neutral.02",
+    "genderPresentation": "androgynous",
+    "ageBand": "adult",
+    "language": "en",
+    "qualityMode": "realtime",
+    "deliveryPreset": "neutral",
+    "archetypes": [
+      "civilian"
+    ],
+    "design": {
+      "description": "A versatile city resident voice with natural conversational delivery and no authored accent. Casting variant 2; it must sound distinct from the other variants.",
+      "previewText": "All right, I am listening. Start from the beginning and tell me what happened."
+    }
+  },
+  {
+    "voiceProfileId": "ambient.neutral.03",
+    "genderPresentation": "androgynous",
+    "ageBand": "adult",
+    "language": "en",
+    "qualityMode": "realtime",
+    "deliveryPreset": "neutral",
+    "archetypes": [
+      "civilian"
+    ],
+    "design": {
+      "description": "A versatile city resident voice with natural conversational delivery and no authored accent. Casting variant 3; it must sound distinct from the other variants.",
+      "previewText": "I have a minute. Tell me what is going on, and I will help if I can."
+    }
+  },
+  {
+    "voiceProfileId": "ambient.civilian.male.01",
+    "genderPresentation": "masculine",
+    "ageBand": "adult",
+    "language": "en",
+    "qualityMode": "realtime",
+    "deliveryPreset": "neutral",
+    "archetypes": [
+      "civilian"
+    ],
+    "design": {
+      "description": "A grounded masculine city resident voice with believable everyday pacing. Casting variant 1; it must sound distinct from the other variants.",
+      "previewText": "I have a minute. Tell me what is going on, and I will help if I can."
+    }
+  },
+  {
+    "voiceProfileId": "ambient.civilian.male.02",
+    "genderPresentation": "masculine",
+    "ageBand": "adult",
+    "language": "en",
+    "qualityMode": "realtime",
+    "deliveryPreset": "neutral",
+    "archetypes": [
+      "civilian"
+    ],
+    "design": {
+      "description": "A grounded masculine city resident voice with believable everyday pacing. Casting variant 2; it must sound distinct from the other variants.",
+      "previewText": "All right, I am listening. Start from the beginning and tell me what happened."
+    }
+  },
+  {
+    "voiceProfileId": "ambient.civilian.male.03",
+    "genderPresentation": "masculine",
+    "ageBand": "adult",
+    "language": "en",
+    "qualityMode": "realtime",
+    "deliveryPreset": "neutral",
+    "archetypes": [
+      "civilian"
+    ],
+    "design": {
+      "description": "A grounded masculine city resident voice with believable everyday pacing. Casting variant 3; it must sound distinct from the other variants.",
+      "previewText": "I have a minute. Tell me what is going on, and I will help if I can."
+    }
+  },
+  {
+    "voiceProfileId": "ambient.civilian.female.01",
+    "genderPresentation": "feminine",
+    "ageBand": "adult",
+    "language": "en",
+    "qualityMode": "realtime",
+    "deliveryPreset": "neutral",
+    "archetypes": [
+      "civilian"
+    ],
+    "design": {
+      "description": "A grounded feminine city resident voice with believable everyday pacing. Casting variant 1; it must sound distinct from the other variants.",
+      "previewText": "I have a minute. Tell me what is going on, and I will help if I can."
+    }
+  },
+  {
+    "voiceProfileId": "ambient.civilian.female.02",
+    "genderPresentation": "feminine",
+    "ageBand": "adult",
+    "language": "en",
+    "qualityMode": "realtime",
+    "deliveryPreset": "neutral",
+    "archetypes": [
+      "civilian"
+    ],
+    "design": {
+      "description": "A grounded feminine city resident voice with believable everyday pacing. Casting variant 2; it must sound distinct from the other variants.",
+      "previewText": "All right, I am listening. Start from the beginning and tell me what happened."
+    }
+  },
+  {
+    "voiceProfileId": "ambient.civilian.female.03",
+    "genderPresentation": "feminine",
+    "ageBand": "adult",
+    "language": "en",
+    "qualityMode": "realtime",
+    "deliveryPreset": "neutral",
+    "archetypes": [
+      "civilian"
+    ],
+    "design": {
+      "description": "A grounded feminine city resident voice with believable everyday pacing. Casting variant 3; it must sound distinct from the other variants.",
+      "previewText": "I have a minute. Tell me what is going on, and I will help if I can."
+    }
+  },
+  {
+    "voiceProfileId": "ambient.tech.male.01",
+    "genderPresentation": "masculine",
+    "ageBand": "young-adult",
+    "language": "en",
+    "qualityMode": "realtime",
+    "deliveryPreset": "neutral",
+    "archetypes": [
+      "tech"
+    ],
+    "design": {
+      "description": "A clear masculine technical worker voice: thoughtful, casual, and never robotic. Casting variant 1; it must sound distinct from the other variants.",
+      "previewText": "I have a minute. Tell me what is going on, and I will help if I can."
+    }
+  },
+  {
+    "voiceProfileId": "ambient.tech.male.02",
+    "genderPresentation": "masculine",
+    "ageBand": "young-adult",
+    "language": "en",
+    "qualityMode": "realtime",
+    "deliveryPreset": "neutral",
+    "archetypes": [
+      "tech"
+    ],
+    "design": {
+      "description": "A clear masculine technical worker voice: thoughtful, casual, and never robotic. Casting variant 2; it must sound distinct from the other variants.",
+      "previewText": "All right, I am listening. Start from the beginning and tell me what happened."
+    }
+  },
+  {
+    "voiceProfileId": "ambient.tech.female.01",
+    "genderPresentation": "feminine",
+    "ageBand": "young-adult",
+    "language": "en",
+    "qualityMode": "realtime",
+    "deliveryPreset": "neutral",
+    "archetypes": [
+      "tech"
+    ],
+    "design": {
+      "description": "A clear feminine technical worker voice: thoughtful, casual, and never robotic. Casting variant 1; it must sound distinct from the other variants.",
+      "previewText": "I have a minute. Tell me what is going on, and I will help if I can."
+    }
+  },
+  {
+    "voiceProfileId": "ambient.tech.female.02",
+    "genderPresentation": "feminine",
+    "ageBand": "young-adult",
+    "language": "en",
+    "qualityMode": "realtime",
+    "deliveryPreset": "neutral",
+    "archetypes": [
+      "tech"
+    ],
+    "design": {
+      "description": "A clear feminine technical worker voice: thoughtful, casual, and never robotic. Casting variant 2; it must sound distinct from the other variants.",
+      "previewText": "All right, I am listening. Start from the beginning and tell me what happened."
+    }
+  },
+  {
+    "voiceProfileId": "ambient.street.male.01",
+    "genderPresentation": "masculine",
+    "ageBand": "adult",
+    "language": "en",
+    "qualityMode": "realtime",
+    "deliveryPreset": "neutral",
+    "archetypes": [
+      "unhoused"
+    ],
+    "design": {
+      "description": "A weathered masculine street resident voice: direct, human, and emotionally restrained. Casting variant 1; it must sound distinct from the other variants.",
+      "previewText": "I have a minute. Tell me what is going on, and I will help if I can."
+    }
+  },
+  {
+    "voiceProfileId": "ambient.street.male.02",
+    "genderPresentation": "masculine",
+    "ageBand": "adult",
+    "language": "en",
+    "qualityMode": "realtime",
+    "deliveryPreset": "neutral",
+    "archetypes": [
+      "unhoused"
+    ],
+    "design": {
+      "description": "A weathered masculine street resident voice: direct, human, and emotionally restrained. Casting variant 2; it must sound distinct from the other variants.",
+      "previewText": "All right, I am listening. Start from the beginning and tell me what happened."
+    }
+  },
+  {
+    "voiceProfileId": "ambient.street.female.01",
+    "genderPresentation": "feminine",
+    "ageBand": "adult",
+    "language": "en",
+    "qualityMode": "realtime",
+    "deliveryPreset": "neutral",
+    "archetypes": [
+      "unhoused"
+    ],
+    "design": {
+      "description": "A weathered feminine street resident voice: direct, human, and emotionally restrained. Casting variant 1; it must sound distinct from the other variants.",
+      "previewText": "I have a minute. Tell me what is going on, and I will help if I can."
+    }
+  },
+  {
+    "voiceProfileId": "ambient.street.female.02",
+    "genderPresentation": "feminine",
+    "ageBand": "adult",
+    "language": "en",
+    "qualityMode": "realtime",
+    "deliveryPreset": "neutral",
+    "archetypes": [
+      "unhoused"
+    ],
+    "design": {
+      "description": "A weathered feminine street resident voice: direct, human, and emotionally restrained. Casting variant 2; it must sound distinct from the other variants.",
+      "previewText": "All right, I am listening. Start from the beginning and tell me what happened."
+    }
+  },
+  {
+    "voiceProfileId": "ambient.crew.male.01",
+    "genderPresentation": "masculine",
+    "ageBand": "young-adult",
+    "language": "en",
+    "qualityMode": "realtime",
+    "deliveryPreset": "neutral",
+    "archetypes": [
+      "gang"
+    ],
+    "design": {
+      "description": "A controlled masculine crew member voice: guarded, confident, and conversational. Casting variant 1; it must sound distinct from the other variants.",
+      "previewText": "I have a minute. Tell me what is going on, and I will help if I can."
+    }
+  },
+  {
+    "voiceProfileId": "ambient.crew.male.02",
+    "genderPresentation": "masculine",
+    "ageBand": "young-adult",
+    "language": "en",
+    "qualityMode": "realtime",
+    "deliveryPreset": "neutral",
+    "archetypes": [
+      "gang"
+    ],
+    "design": {
+      "description": "A controlled masculine crew member voice: guarded, confident, and conversational. Casting variant 2; it must sound distinct from the other variants.",
+      "previewText": "All right, I am listening. Start from the beginning and tell me what happened."
+    }
+  },
+  {
+    "voiceProfileId": "ambient.crew.female.01",
+    "genderPresentation": "feminine",
+    "ageBand": "young-adult",
+    "language": "en",
+    "qualityMode": "realtime",
+    "deliveryPreset": "neutral",
+    "archetypes": [
+      "gang"
+    ],
+    "design": {
+      "description": "A controlled feminine crew member voice: guarded, confident, and conversational. Casting variant 1; it must sound distinct from the other variants.",
+      "previewText": "I have a minute. Tell me what is going on, and I will help if I can."
+    }
+  },
+  {
+    "voiceProfileId": "ambient.crew.female.02",
+    "genderPresentation": "feminine",
+    "ageBand": "young-adult",
+    "language": "en",
+    "qualityMode": "realtime",
+    "deliveryPreset": "neutral",
+    "archetypes": [
+      "gang"
+    ],
+    "design": {
+      "description": "A controlled feminine crew member voice: guarded, confident, and conversational. Casting variant 2; it must sound distinct from the other variants.",
+      "previewText": "All right, I am listening. Start from the beginning and tell me what happened."
+    }
+  },
+  {
+    "voiceProfileId": "ambient.shopkeeper.male.01",
+    "genderPresentation": "masculine",
+    "ageBand": "adult",
+    "language": "en",
+    "qualityMode": "realtime",
+    "deliveryPreset": "neutral",
+    "archetypes": [
+      "shopkeeper"
+    ],
+    "design": {
+      "description": "A practical masculine shopkeeper voice: approachable, clear, and naturally expressive. Casting variant 1; it must sound distinct from the other variants.",
+      "previewText": "I have a minute. Tell me what is going on, and I will help if I can."
+    }
+  },
+  {
+    "voiceProfileId": "ambient.shopkeeper.male.02",
+    "genderPresentation": "masculine",
+    "ageBand": "adult",
+    "language": "en",
+    "qualityMode": "realtime",
+    "deliveryPreset": "neutral",
+    "archetypes": [
+      "shopkeeper"
+    ],
+    "design": {
+      "description": "A practical masculine shopkeeper voice: approachable, clear, and naturally expressive. Casting variant 2; it must sound distinct from the other variants.",
+      "previewText": "All right, I am listening. Start from the beginning and tell me what happened."
+    }
+  },
+  {
+    "voiceProfileId": "ambient.shopkeeper.female.01",
+    "genderPresentation": "feminine",
+    "ageBand": "adult",
+    "language": "en",
+    "qualityMode": "realtime",
+    "deliveryPreset": "neutral",
+    "archetypes": [
+      "shopkeeper"
+    ],
+    "design": {
+      "description": "A practical feminine shopkeeper voice: approachable, clear, and naturally expressive. Casting variant 1; it must sound distinct from the other variants.",
+      "previewText": "I have a minute. Tell me what is going on, and I will help if I can."
+    }
+  },
+  {
+    "voiceProfileId": "ambient.shopkeeper.female.02",
+    "genderPresentation": "feminine",
+    "ageBand": "adult",
+    "language": "en",
+    "qualityMode": "realtime",
+    "deliveryPreset": "neutral",
+    "archetypes": [
+      "shopkeeper"
+    ],
+    "design": {
+      "description": "A practical feminine shopkeeper voice: approachable, clear, and naturally expressive. Casting variant 2; it must sound distinct from the other variants.",
+      "previewText": "All right, I am listening. Start from the beginning and tell me what happened."
+    }
+  }
+]

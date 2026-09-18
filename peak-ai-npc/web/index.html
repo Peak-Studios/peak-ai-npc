@@ -1,0 +1,161 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Peak AI NPC</title>
+    <style>
+        html, body {
+            width: 100%;
+            height: 100%;
+            margin: 0;
+            background: rgba(0, 0, 0, 0) !important;
+        }
+    </style>
+    <link rel="stylesheet" href="nui-transparent.css">
+</head>
+<body>
+    <!--
+        Voice interaction is fully automatic via Push-to-Talk.
+        The dock is a passive HUD — no mic clicks needed.
+        Text fallback available via Shift key.
+    -->
+    <main id="app" hidden>
+        <section class="voice-dock" data-state="idle" data-interactive="false" aria-label="NPC conversation">
+
+            <!-- NPC identity bar -->
+            <header class="identity">
+                <span class="presence" aria-hidden="true"></span>
+                <div>
+                    <strong id="npcName">NPC</strong>
+                    <span id="occupation">Conversation</span>
+                </div>
+                <button id="close" class="quiet-button" type="button" aria-label="End conversation">×</button>
+            </header>
+
+            <!-- Voice status row -->
+            <div class="voice-stage">
+                <!-- Animated mic indicator (purely visual, not a button) -->
+                <div id="micIndicator" class="mic-indicator" role="img" aria-label="Ready">
+                    <span class="mic-rings"></span>
+                    <svg viewBox="0 0 24 24" aria-hidden="true">
+                        <path d="M12 15.5a3.5 3.5 0 0 0 3.5-3.5V6a3.5 3.5 0 1 0-7 0v6a3.5 3.5 0 0 0 3.5 3.5Zm-7-4a1 1 0 0 1 2 0V12a5 5 0 0 0 10 0v-.5a1 1 0 1 1 2 0V12a7 7 0 0 1-6 6.92V21h3a1 1 0 1 1 0 2H8a1 1 0 1 1 0-2h3v-2.08A7 7 0 0 1 5 12v-.5Z"/>
+                    </svg>
+                    <!-- Waveform bars animate live during recording/speaking -->
+                    <div class="waveform-inline" aria-hidden="true">
+                        <i></i><i></i><i></i><i></i><i></i>
+                    </div>
+                </div>
+
+                <div class="state-copy" aria-live="polite">
+                    <strong id="stateLabel">Ready to talk</strong>
+                    <span id="status">Hold PTT and speak naturally</span>
+                </div>
+            </div>
+
+            <!-- Waveform visualizer (shown during recording/speaking) -->
+            <div class="waveform" aria-hidden="true">
+                <i></i><i></i><i></i><i></i><i></i><i></i><i></i>
+            </div>
+
+            <!-- Player transcript line -->
+            <p id="transcript" class="transcript" aria-live="polite" hidden></p>
+
+            <!-- Purchase confirmation (shown by server events) -->
+            <div id="purchase" class="purchase" hidden>
+                <span id="purchaseSummary">Transaction confirmation required</span>
+                <button id="confirm" type="button">Confirm</button>
+            </div>
+
+            <!-- Text fallback (toggled via Shift) -->
+            <form id="form" class="text-fallback" hidden>
+                <label for="input">Text input</label>
+                <div>
+                    <input id="input" aria-describedby="status" maxlength="500" autocomplete="off" placeholder="Type your message…">
+                    <button type="submit">Send</button>
+                </div>
+            </form>
+
+            <footer>
+                <button id="openShop" class="quiet-button" type="button" hidden>Browse shop</button>
+                <button id="textToggle" class="quiet-button" type="button" aria-expanded="false" aria-controls="form">Shift for text</button>
+                <span id="hint">Hold NPC PTT (default G) · ESC to leave</span>
+            </footer>
+            <div class="microphone-settings">
+                <label for="microphoneDevice">Microphone</label>
+                <select id="microphoneDevice" aria-describedby="status"><option value="">System default microphone</option></select>
+                <button id="prepareMicrophone" class="quiet-button" type="button">Prepare microphone</button>
+            </div>
+        </section>
+
+        <!-- Peak AI Shopkeeper Wares Showcase Drawer -->
+        <section id="shopShowcase" class="shop-showcase" hidden aria-label="Store Catalog">
+            <header class="shop-header">
+                <div class="shop-title-box">
+                    <span class="shop-tag">AI STORE</span>
+                    <h2 id="shopName">Store Wares</h2>
+                    <span id="shopSubtitle" class="shop-subtitle">Curated stock · Direct dialogue</span>
+                </div>
+                <div class="shop-actions">
+                    <button id="closeShop" class="quiet-button" type="button" aria-label="Close shop wares">✕</button>
+                </div>
+            </header>
+
+            <!-- Category / Search filter row -->
+            <div class="shop-toolbar">
+                <div class="shop-tabs" id="shopTabs">
+                    <button type="button" class="tab-btn active" data-category="all">All</button>
+                    <button type="button" class="tab-btn" data-category="food">Food & Drink</button>
+                    <button type="button" class="tab-btn" data-category="supplies">General</button>
+                    <button type="button" class="tab-btn" data-category="tools">Tools & Gear</button>
+                </div>
+                <div class="shop-balance">
+                    <span>Cash: </span><strong id="playerCashDisplay">$0</strong>
+                </div>
+            </div>
+
+            <!-- Items Grid -->
+            <div id="shopGrid" class="shop-grid" role="list">
+                <!-- Dynamically populated item cards -->
+            </div>
+
+            <!-- Active Selection / Cart / Order Drawer Footer -->
+            <footer class="shop-footer">
+                <div class="shop-selection-info" id="selectionInfo">
+                    <div class="item-selected-details">
+                        <strong id="selectedItemLabel">Select an item</strong>
+                        <span id="selectedItemPrice">$0 each</span>
+                    </div>
+                    <div class="shop-quantity-controls">
+                        <button type="button" id="qtyMinus" class="qty-btn" aria-label="Decrease quantity">-</button>
+                        <span id="selectedQty" class="qty-display">1</span>
+                        <button type="button" id="qtyPlus" class="qty-btn" aria-label="Increase quantity">+</button>
+                    </div>
+                </div>
+                <div class="shop-checkout-actions">
+                    <button id="askNpcAboutItem" type="button" class="shop-chat-btn">💬 Ask Shopkeeper</button>
+                    <button id="sellSelectedItem" type="button" class="shop-chat-btn" disabled>Get sell quote</button>
+                    <button id="buySelectedItem" type="button" class="shop-buy-btn" disabled>Get buy quote</button>
+                </div>
+                <p id="shopStatus" role="status" aria-live="polite">Select an item to see an exact quote.</p>
+            </footer>
+        </section>
+    </main>
+
+    <!-- NPC subtitle fallback (shown when 3D subtitles are unavailable) -->
+    <div id="subtitleFallback" class="subtitle-fallback" hidden aria-live="polite"></div>
+
+    <!-- Browser-only meeting fallback; app.js reveals this only for ?preview=demo. -->
+    <aside id="previewControls" class="preview-controls" hidden aria-label="Demo lifecycle controls">
+        <span>Demo preview</span>
+        <strong id="previewStateLabel">Ready</strong>
+        <div>
+            <button id="previewPrevious" type="button" aria-label="Previous demo state">←</button>
+            <button id="previewNext" type="button">Next state →</button>
+        </div>
+    </aside>
+
+    <script src="app.js"></script>
+    <script src="shop.js"></script>
+</body>
+</html>

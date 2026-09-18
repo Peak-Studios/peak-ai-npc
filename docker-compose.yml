@@ -1,0 +1,143 @@
+services:
+  gateway:
+    # One process owns the on-disk operation ledgers; never scale this service.
+    scale: 1
+    init: true
+    build:
+      context: ./gateway
+    ports:
+      # Local test default: never expose the raw gateway/admin port to the LAN.
+      # Production should publish only through an authenticated TLS reverse proxy.
+      - "127.0.0.1:8787:8787"
+    environment:
+      NODE_ENV: production
+      PORT: 8787
+      AI_NPC_GATEWAY_SECRET: ${AI_NPC_GATEWAY_SECRET:?set AI_NPC_GATEWAY_SECRET}
+      AI_NPC_ENTITLEMENT_URL: ${AI_NPC_ENTITLEMENT_URL:-}
+      AI_NPC_GATEWAY_PORTAL_SECRET: ${AI_NPC_GATEWAY_PORTAL_SECRET:-}
+      AI_NPC_ENTITLEMENT_CACHE_TTL_MS: ${AI_NPC_ENTITLEMENT_CACHE_TTL_MS:-30000}
+      AI_NPC_ENTITLEMENT_TIMEOUT_MS: ${AI_NPC_ENTITLEMENT_TIMEOUT_MS:-3000}
+      AI_NPC_PORTAL_BASE_URL: ${AI_NPC_PORTAL_BASE_URL:-}
+      AI_NPC_USAGE_URL: ${AI_NPC_USAGE_URL:-}
+      AI_NPC_USAGE_TIMEOUT_MS: ${AI_NPC_USAGE_TIMEOUT_MS:-1500}
+      AI_NPC_HEARTBEAT_URL: ${AI_NPC_HEARTBEAT_URL:-}
+      AI_NPC_HEARTBEAT_TIMEOUT_MS: ${AI_NPC_HEARTBEAT_TIMEOUT_MS:-1500}
+      AI_NPC_PUBLIC_BASE_URL: ${AI_NPC_PUBLIC_BASE_URL:-http://127.0.0.1:8787}
+      AI_NPC_LOCAL_DEVELOPMENT: ${AI_NPC_LOCAL_DEVELOPMENT:-false}
+      AI_NPC_DATABASE_URL: postgres://ainpc:${POSTGRES_PASSWORD:?set POSTGRES_PASSWORD}@postgres:5432/ainpc
+      AI_NPC_CATALOG_FILE: /app/data/npcs.json
+      AI_NPC_OPERATIONS_FILE: /app/data/operations.json
+      AI_NPC_DIRECT_OPERATIONS_FILE: /app/data/direct-operations.json
+      AI_NPC_PROVIDER_CONCURRENCY: ${AI_NPC_PROVIDER_CONCURRENCY:-8}
+      AI_NPC_REQUEST_TIMEOUT_MS: ${AI_NPC_REQUEST_TIMEOUT_MS:-30000}
+      AI_NPC_PROVIDER_TIMEOUT_MS: ${AI_NPC_PROVIDER_TIMEOUT_MS:-20000}
+      AI_NPC_PROVIDER: ${AI_NPC_PROVIDER:-mock}
+      AI_NPC_PROVIDER_KEY: ${AI_NPC_PROVIDER_KEY:-}
+      AI_NPC_PROVIDER_ENDPOINT: ${AI_NPC_PROVIDER_ENDPOINT:-https://api.openai.com/v1}
+      AI_NPC_PROVIDER_MODEL: ${AI_NPC_PROVIDER_MODEL:-gpt-4o-mini}
+      AI_NPC_PROVIDER_REASONING_EFFORT: ${AI_NPC_PROVIDER_REASONING_EFFORT:-}
+      AI_NPC_PROVIDER_REASONING_FORMAT: ${AI_NPC_PROVIDER_REASONING_FORMAT:-}
+      AI_NPC_PROVIDER_MAX_OUTPUT_TOKENS: ${AI_NPC_PROVIDER_MAX_OUTPUT_TOKENS:-180}
+      AI_NPC_MAX_RESPONSE_CHARACTERS: ${AI_NPC_MAX_RESPONSE_CHARACTERS:-1200}
+      AI_NPC_ADMIN_STORE_TRANSCRIPTS: ${AI_NPC_ADMIN_STORE_TRANSCRIPTS:-false}
+      AI_NPC_PROVIDER_TOOL_MODE: ${AI_NPC_PROVIDER_TOOL_MODE:-auto}
+      AI_NPC_PROVIDER_RETRIES: ${AI_NPC_PROVIDER_RETRIES:-0}
+      AI_NPC_PROVIDER_RETRY_DELAY_MS: ${AI_NPC_PROVIDER_RETRY_DELAY_MS:-150}
+      AI_NPC_MEMORY_CONCURRENCY: ${AI_NPC_MEMORY_CONCURRENCY:-4}
+      AI_NPC_MEMORY_QUEUE_MAX: ${AI_NPC_MEMORY_QUEUE_MAX:-500}
+      AI_NPC_FALLBACK_PROVIDER: ${AI_NPC_FALLBACK_PROVIDER:-}
+      AI_NPC_FALLBACK_KEY: ${AI_NPC_FALLBACK_KEY:-}
+      AI_NPC_FALLBACK_ENDPOINT: ${AI_NPC_FALLBACK_ENDPOINT:-}
+      AI_NPC_FALLBACK_MODEL: ${AI_NPC_FALLBACK_MODEL:-}
+      AI_NPC_FALLBACK_REASONING_EFFORT: ${AI_NPC_FALLBACK_REASONING_EFFORT:-}
+      AI_NPC_FALLBACK_REASONING_FORMAT: ${AI_NPC_FALLBACK_REASONING_FORMAT:-}
+      AI_NPC_FALLBACK_MAX_OUTPUT_TOKENS: ${AI_NPC_FALLBACK_MAX_OUTPUT_TOKENS:-180}
+      AI_NPC_TTS_PROVIDER: ${AI_NPC_TTS_PROVIDER:-}
+      AI_NPC_TTS_KEY: ${AI_NPC_TTS_KEY:-}
+      AI_NPC_TTS_ENDPOINT: ${AI_NPC_TTS_ENDPOINT:-}
+      AI_NPC_TTS_MODEL: ${AI_NPC_TTS_MODEL:-}
+      AI_NPC_TTS_VOICE: ${AI_NPC_TTS_VOICE:-}
+      AI_NPC_TTS_FORMAT: ${AI_NPC_TTS_FORMAT:-mp3}
+      AI_NPC_TTS_MAX_CHARACTERS: ${AI_NPC_TTS_MAX_CHARACTERS:-1200}
+      AI_NPC_TTS_DEFAULT_PROFILE: ${AI_NPC_TTS_DEFAULT_PROFILE:-martin-hale}
+      AI_NPC_VOICE_REGISTRY_PATH: ${AI_NPC_VOICE_REGISTRY_PATH:-/app/data/voice-registry.json}
+      AI_NPC_VOICE_PROFILES_PATH: ${AI_NPC_VOICE_PROFILES_PATH:-/app/voice-profiles.example.json}
+      AI_NPC_VOICE_PROVISION_MAX: ${AI_NPC_VOICE_PROVISION_MAX:-32}
+      AI_NPC_CARTESIA_VERSION: ${AI_NPC_CARTESIA_VERSION:-2026-03-01}
+      AI_NPC_VISION_PROVIDER: ${AI_NPC_VISION_PROVIDER:-}
+      AI_NPC_VISION_KEY: ${AI_NPC_VISION_KEY:-}
+      AI_NPC_VISION_ENDPOINT: ${AI_NPC_VISION_ENDPOINT:-}
+      AI_NPC_VISION_MODEL: ${AI_NPC_VISION_MODEL:-}
+      AI_NPC_VISION_TIMEOUT_MS: ${AI_NPC_VISION_TIMEOUT_MS:-8000}
+      AI_NPC_VISION_MAX_OUTPUT_TOKENS: ${AI_NPC_VISION_MAX_OUTPUT_TOKENS:-120}
+      AI_NPC_VISION_REASONING_EFFORT: ${AI_NPC_VISION_REASONING_EFFORT:-}
+      AI_NPC_VISION_REASONING_FORMAT: ${AI_NPC_VISION_REASONING_FORMAT:-}
+      AI_NPC_VISION_KEEP_ALIVE: ${AI_NPC_VISION_KEEP_ALIVE:-30m}
+      AI_NPC_VISION_FALLBACK_PROVIDER: ${AI_NPC_VISION_FALLBACK_PROVIDER:-}
+      AI_NPC_VISION_FALLBACK_KEY: ${AI_NPC_VISION_FALLBACK_KEY:-}
+      AI_NPC_VISION_FALLBACK_ENDPOINT: ${AI_NPC_VISION_FALLBACK_ENDPOINT:-}
+      AI_NPC_VISION_FALLBACK_MODEL: ${AI_NPC_VISION_FALLBACK_MODEL:-}
+      AI_NPC_VISION_FALLBACK_TIMEOUT_MS: ${AI_NPC_VISION_FALLBACK_TIMEOUT_MS:-8000}
+      AI_NPC_VISION_FALLBACK_MAX_OUTPUT_TOKENS: ${AI_NPC_VISION_FALLBACK_MAX_OUTPUT_TOKENS:-120}
+      AI_NPC_VISION_FALLBACK_REASONING_EFFORT: ${AI_NPC_VISION_FALLBACK_REASONING_EFFORT:-}
+      AI_NPC_VISION_FALLBACK_REASONING_FORMAT: ${AI_NPC_VISION_FALLBACK_REASONING_FORMAT:-}
+      AI_NPC_VISION_FALLBACK_KEEP_ALIVE: ${AI_NPC_VISION_FALLBACK_KEEP_ALIVE:-30m}
+      AI_NPC_STT_PROVIDER: ${AI_NPC_STT_PROVIDER:-}
+      AI_NPC_STT_KEY: ${AI_NPC_STT_KEY:-}
+      AI_NPC_STT_ENDPOINT: ${AI_NPC_STT_ENDPOINT:-}
+      AI_NPC_STT_MODEL: ${AI_NPC_STT_MODEL:-}
+    depends_on:
+      postgres:
+        condition: service_healthy
+    read_only: true
+    pids_limit: 128
+    mem_limit: 1g
+    cpus: 2.0
+    stop_grace_period: 30s
+    logging:
+      driver: json-file
+      options:
+        max-size: "10m"
+        max-file: "3"
+    tmpfs:
+      - /tmp:size=16m,noexec,nosuid,nodev
+    volumes:
+      - ainpc-gateway-data:/app/data
+    cap_drop:
+      - ALL
+    security_opt:
+      - no-new-privileges:true
+    healthcheck:
+      test: ["CMD", "node", "-e", "fetch('http://127.0.0.1:8787/health').then(r=>{if(!r.ok)process.exit(1)}).catch(()=>process.exit(1))"]
+      interval: 10s
+      timeout: 5s
+      retries: 6
+    restart: unless-stopped
+
+  postgres:
+    image: postgres:16-alpine
+    environment:
+      POSTGRES_DB: ainpc
+      POSTGRES_USER: ainpc
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:?set POSTGRES_PASSWORD}
+    volumes:
+      - ainpc-postgres:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U ainpc -d ainpc"]
+      interval: 5s
+      timeout: 5s
+      retries: 12
+    restart: unless-stopped
+    security_opt:
+      - no-new-privileges:true
+    pids_limit: 128
+    mem_limit: 1g
+    logging:
+      driver: json-file
+      options:
+        max-size: "10m"
+        max-file: "3"
+
+volumes:
+  ainpc-postgres:
+  ainpc-gateway-data:

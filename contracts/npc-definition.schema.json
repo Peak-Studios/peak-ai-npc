@@ -1,0 +1,70 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://advanced-ai-npc.local/contracts/npc-definition.schema.json",
+  "title": "NpcDefinition",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["id", "model", "coords", "identity", "allowedTools"],
+  "properties": {
+    "id": { "type": "string", "pattern": "^[A-Za-z0-9_-]{1,64}$" },
+    "model": { "type": "string", "minLength": 1, "maxLength": 80 },
+    "coords": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["x", "y", "z", "w"],
+      "properties": {
+        "x": { "type": "number", "minimum": -100000, "maximum": 100000 },
+        "y": { "type": "number", "minimum": -100000, "maximum": 100000 },
+        "z": { "type": "number", "minimum": -1000, "maximum": 10000 },
+        "w": { "type": "number", "minimum": -360, "maximum": 360 }
+      }
+    },
+    "identity": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["name", "occupation"],
+      "properties": {
+        "name": { "type": "string", "minLength": 1, "maxLength": 80 },
+        "occupation": { "type": "string", "minLength": 1, "maxLength": 80 }
+      }
+    },
+    "personality": { "type": "string", "maxLength": 2000 },
+    "knowledge": { "type": "string", "maxLength": 4000 },
+    "enabled": { "type": "boolean", "default": true },
+    "voice": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["voiceProfileId", "voiceSeed", "genderPresentation", "ageBand", "language", "qualityMode", "deliveryPreset"],
+      "properties": {
+        "voiceProfileId": { "type": "string", "pattern": "^[A-Za-z0-9_.:-]{1,100}$" },
+        "voiceSeed": {
+          "oneOf": [
+            { "type": "integer", "minimum": 0, "maximum": 2147483647 },
+            { "type": "string", "minLength": 1, "maxLength": 160 }
+          ]
+        },
+        "genderPresentation": { "enum": ["feminine", "masculine", "androgynous"] },
+        "ageBand": { "enum": ["young-adult", "adult", "older-adult"] },
+        "accent": { "type": "string", "minLength": 1, "maxLength": 80 },
+        "language": { "type": "string", "pattern": "^[A-Za-z]{2,3}(-[A-Za-z0-9]{2,8})*$" },
+        "qualityMode": { "enum": ["realtime", "quality"] },
+        "deliveryPreset": { "enum": ["neutral", "warm", "stern", "nervous", "urgent", "quiet", "menacing"] },
+        "provider": { "type": "string", "maxLength": 40, "description": "Compatibility-only declaration for legacy provider-native voice values." },
+        "voice": { "type": "string", "maxLength": 120, "description": "Compatibility-only provider-native voice value. Accepted only when provider matches the active adapter." }
+      }
+    },
+    "allowedTools": { "type": "array", "maxItems": 32, "items": { "type": "string", "pattern": "^[a-z0-9_-]{1,64}$" } },
+    "interactionDistance": { "type": "number", "minimum": 1, "maximum": 20 },
+    "shop": { "type": "object", "additionalProperties": true },
+    "missions": { "type": "array", "maxItems": 32, "items": { "type": "string", "maxLength": 80 } },
+    "interactionPolicy": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "ace": { "type": "string", "maxLength": 100 },
+        "jobs": { "type": "object", "additionalProperties": { "type": "integer", "minimum": 0, "maximum": 100 } },
+        "gangs": { "type": "object", "additionalProperties": { "type": "integer", "minimum": 0, "maximum": 100 } }
+      }
+    }
+  }
+}

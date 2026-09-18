@@ -1,0 +1,30 @@
+# Closed build context: only compiler/runtime inputs can reach the builder.
+**
+!package.json
+!package-lock.json
+!tsconfig.json
+!src/
+!src/**
+!migrations/
+!migrations/**
+!voice-profiles.example.json
+!Dockerfile
+!.dockerignore
+# Deny private files even if accidentally placed in an allowed source tree.
+**/.env*
+**/node_modules/**
+**/data/**
+**/logs/**
+**/.git/**
+**/.planning/**
+**/.runtime/**
+**/voice-profiles.json*
+**/voice-registry.json*
+**/*.log
+**/*.pem
+**/*.key
+**/*.crt
+**/*.cer
+**/*.pfx
+**/*.p12
+**/*.bak

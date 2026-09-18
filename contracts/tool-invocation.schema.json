@@ -1,0 +1,16 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://advanced-ai-npc.local/contracts/tool-invocation.schema.json",
+  "title": "ToolInvocation",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["sessionId", "name", "arguments"],
+  "properties": {
+    "sessionId": { "type": "string", "minLength": 16, "maxLength": 160 },
+    "idempotencyKey": { "type": "string", "minLength": 16, "maxLength": 160 },
+    "name": { "type": "string", "pattern": "^[a-z0-9_-]{1,64}$" },
+    "arguments": { "type": "object", "maxProperties": 32 },
+    "validation": { "enum": ["pending", "accepted", "rejected"] },
+    "result": {}
+  }
+}
