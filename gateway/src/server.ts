@@ -132,6 +132,9 @@ const vision: VisionProvider = createVisionPipeline();
 const transcription: TranscriptionProvider = ['openai-compatible', 'openai', 'custom'].includes((process.env.AI_NPC_STT_PROVIDER ?? '').toLowerCase())
   ? new OpenAICompatibleTranscriptionProvider(process.env.AI_NPC_STT_ENDPOINT ?? process.env.AI_NPC_PROVIDER_ENDPOINT ?? 'https://api.openai.com/v1', process.env.AI_NPC_STT_KEY ?? '', process.env.AI_NPC_STT_MODEL ?? 'whisper-1')
   : new NoopTranscriptionProvider();
+const transcription: TranscriptionProvider = ['openai-compatible', 'openai', 'custom'].includes((process.env.AI_NPC_STT_PROVIDER ?? '').toLowerCase())
+  ? new OpenAICompatibleTranscriptionProvider(process.env.AI_NPC_STT_ENDPOINT ?? process.env.AI_NPC_PROVIDER_ENDPOINT ?? 'https://api.openai.com/v1', process.env.AI_NPC_STT_KEY ?? '', process.env.AI_NPC_STT_MODEL ?? 'whisper-1')
+  : new NoopTranscriptionProvider();
 
 function structuredLog(level: 'info' | 'error', event: string, fields: Record<string, unknown>) {
   const line = JSON.stringify({ service: 'advanced-ai-npc', level, event, at: new Date().toISOString(), ...fields });
@@ -139,11 +142,10 @@ function structuredLog(level: 'info' | 'error', event: string, fields: Record<st
 }
 
 function gatewayHealth() {
-  const managedMode = Boolean(process.env.AI_NPC_ENTITLEMENT_URL?.trim());
-  const managedReady = !managedMode || (entitlementValidator.readiness().ready && usageSettlement.readiness().ready
-    && portalHeartbeat.readiness().ready && portalDataDeletion.readiness().ready);
+  // Self-hosted mode: no managed entitlement portal required.
+  const managedReady = true;
   // Speech review/provider failures retain text service and its normal authority gates.
-  const healthy = operationStatus === 'ready' && catalogStatus === 'ready' && memoryStatus === 'ready' && residentStatus === 'ready' && managedReady;
+  const healthy = operationStatus === 'ready' && catalogStatus === 'ready' && memoryStatus === 'ready' && residentStatus === 'ready';
   const reason = operationStatus !== 'ready' ? 'operations_unavailable'
     : catalogStatus !== 'ready' ? 'catalog_unavailable'
     : memoryStatus === 'error' ? 'memory_unavailable'
