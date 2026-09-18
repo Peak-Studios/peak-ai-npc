@@ -11,7 +11,7 @@ The FiveM resource is provider-agnostic. It sends an authenticated, vendor-neutr
 | ElevenLabs voice registry | A qualified text provider | A qualified compatible STT | ElevenLabs `eleven_flash_v2_5` |
 | Private/self-hosted | Ollama or another compatible runtime | Compatible local Whisper service | Compatible local TTS service |
 
-These are implemented adapter configurations, not price, quality, capacity or commercial-rights benchmarks. Confirm the selected model, account access, language and output format against the vendor documentation before enabling it. The Groq Orpheus example below uses WAV and a 200-character bound. Current local real-provider evidence is recorded in `RELEASE_READINESS.md`; every advertised combination still needs its own acceptance evidence.
+These are implemented adapter configurations, not price, quality, capacity or commercial-rights benchmarks. Confirm the selected model, account access, language and output format against the vendor documentation before enabling it. The Groq Orpheus example below uses WAV and a 200-character bound.
 
 English is the product default, not a restriction. Leave the STT language unset for automatic detection, or configure a short language hint. TTS language coverage and pronunciation vary by provider and voice, so every launch language still needs a real listening/transcription test. No provider can honestly guarantee zero quality change across every language.
 

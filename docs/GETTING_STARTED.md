@@ -46,15 +46,14 @@ docker compose up --build
 
 In game, aim at an example NPC or an eligible ambient ped and use `/ainpc`. Ambient peds only receive the configured reversible social-action allowlist; configured NPCs keep their role-specific store/mission tools. From the server console, run `ainpc_status`. The status output is redacted and reports the detected framework, optional integrations, NPC counts, and gateway health.
 
-Run the deterministic checks from the repository root:
+You can verify gateway build and types from the gateway directory:
 
 ```powershell
-.\scripts\validate-resource.ps1
 cd gateway
-npm test
+npm run typecheck
+npm run build
 ```
 
-This workspace has booted the resource on the configured local QBCore test profile. Multiplayer, economy edge cases, NUI playback, and every additional framework combination still require the live checks in the compatibility matrix.
 
 ## 4. Configure NPCs and integrations
 

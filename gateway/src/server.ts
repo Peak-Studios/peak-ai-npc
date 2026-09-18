@@ -132,9 +132,6 @@ const vision: VisionProvider = createVisionPipeline();
 const transcription: TranscriptionProvider = ['openai-compatible', 'openai', 'custom'].includes((process.env.AI_NPC_STT_PROVIDER ?? '').toLowerCase())
   ? new OpenAICompatibleTranscriptionProvider(process.env.AI_NPC_STT_ENDPOINT ?? process.env.AI_NPC_PROVIDER_ENDPOINT ?? 'https://api.openai.com/v1', process.env.AI_NPC_STT_KEY ?? '', process.env.AI_NPC_STT_MODEL ?? 'whisper-1')
   : new NoopTranscriptionProvider();
-const transcription: TranscriptionProvider = ['openai-compatible', 'openai', 'custom'].includes((process.env.AI_NPC_STT_PROVIDER ?? '').toLowerCase())
-  ? new OpenAICompatibleTranscriptionProvider(process.env.AI_NPC_STT_ENDPOINT ?? process.env.AI_NPC_PROVIDER_ENDPOINT ?? 'https://api.openai.com/v1', process.env.AI_NPC_STT_KEY ?? '', process.env.AI_NPC_STT_MODEL ?? 'whisper-1')
-  : new NoopTranscriptionProvider();
 
 function structuredLog(level: 'info' | 'error', event: string, fields: Record<string, unknown>) {
   const line = JSON.stringify({ service: 'advanced-ai-npc', level, event, at: new Date().toISOString(), ...fields });

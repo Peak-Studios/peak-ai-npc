@@ -10,13 +10,16 @@ export interface LicenseInfo {
   status: LicenseStatus;
   rateLimit: number; // requests per minute
   allowedFeatures: string[];
+  concurrencyLimit?: number;
+  remainingTtsQuota?: number;
+  remainingVoiceSeconds?: number;
 }
 
 export interface LicenseValidationResult {
   valid: boolean;
   info?: LicenseInfo;
   reason?: string;
-  source?: 'local';
+  source?: 'local' | 'managed';
   serverId?: string;
 }
 
@@ -80,12 +83,16 @@ export function validateLicenseKey(
     if (safeCompare(trimmedKey, envSecret)) {
       return {
         valid: true,
+        source: 'local',
         info: {
           key: trimmedKey,
           tier: 'pro',
           status: 'active',
           rateLimit: 120,
           allowedFeatures: DEFAULT_FEATURES,
+          concurrencyLimit: 8,
+          remainingTtsQuota: 1000000,
+          remainingVoiceSeconds: 1000000,
         },
       };
     }
@@ -97,12 +104,16 @@ export function validateLicenseKey(
   if (isDev) {
     return {
       valid: true,
+      source: 'local',
       info: {
         key: trimmedKey,
         tier: 'pro',
         status: 'active',
         rateLimit: 120,
         allowedFeatures: DEFAULT_FEATURES,
+        concurrencyLimit: 8,
+        remainingTtsQuota: 1000000,
+        remainingVoiceSeconds: 1000000,
       },
     };
   }
@@ -125,7 +136,6 @@ export async function validateRequestLicense(
   };
 }
 
-// Stub for managed feature availability — always returns true in self-hosted mode
 export type ManagedPaidFeature = 'llm' | 'tts' | 'stt' | 'vision';
 export type ManagedFeature = ManagedPaidFeature | 'memory';
 

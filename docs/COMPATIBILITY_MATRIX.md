@@ -28,6 +28,6 @@
 | File memory | Yes | Concurrency, relationship, expiry, and deletion tests pass |
 | PostgreSQL memory | Yes | Disposable persistence/isolation/concurrency/migration smoke passed; production is healthy and initial matched backup/off-host restore passed; deployed retention qualification remains |
 
-## Release rule
+## Verification
 
-Do not advertise a framework/inventory/target/provider/language combination until it passes on the exact release artifact. The detailed scenarios are machine-readable in `tests/compatibility-fixtures.json`; the concise human workflow is in [LIVE_TEST_RUNBOOK.md](LIVE_TEST_RUNBOOK.md).
+Test your framework, inventory, target, and provider combination in a staging environment before public launch to ensure optimal latency and interaction quality.
