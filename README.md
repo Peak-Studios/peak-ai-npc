@@ -23,6 +23,8 @@ A self-hosted AI NPC system for FiveM. Give your NPCs real conversations, voice,
 
 ## Architecture
 
+![How Peak AI NPC Works](docs/assets/peak-ai-npc-how-it-works.svg)
+
 ```
 FiveM server (peak-ai-npc/)
        │  HTTP (shared secret)
